@@ -22,8 +22,7 @@ BEGIN
     END;
 
     -- Construct the URL
-    l_url := 'https://oracle-abl.akijinsaf.com/ords/f?p=131:'
-             || 578 || '&session=' || v('APP_SESSION');
+    l_url := 'f?p=131:'|| 578 || '&session=' || v('APP_SESSION');
 
     -- Check if the user is not authorized for the page
     IF v_cnt_page = 0 THEN
