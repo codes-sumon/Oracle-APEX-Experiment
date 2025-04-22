@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Leave Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* All existing styles remain unchanged */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      padding: 20px;
+    }
+
+    .dashboard-header {
+      margin-bottom: 25px;
+      text-align: center;
+      position: relative;
+    }
+
+    .dashboard-header h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .dashboard-header h2:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #4E54C8, #8F94FB);
+      border-radius: 3px;
+    }
+
+    .dashboard-header p {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    /* Nav Buttons Styling */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 25px 0;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      padding: 12px 24px;
+      border: none;
+      background-color: #f1f5f9;
+      color: #475569;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .nav-btn:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+      transition: all 0.4s ease;
+      z-index: -1;
+    }
+
+    .nav-btn:hover:before {
+      left: 100%;
+    }
+
+    .nav-btn:hover {
+      background-color: #e2e8f0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, #4E54C8, #8F94FB);
+      color: white;
+      box-shadow: 0 5px 15px rgba(78, 84, 200, 0.25);
+    }
+
+    .nav-btn.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(78, 84, 200, 0.35);
+    }
+
+    .leave-admin-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      padding: 15px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .admin-card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      z-index: 1;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .admin-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .admin-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .admin-card-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .admin-card:hover .admin-card-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .admin-card-icon svg,
+    .admin-card-icon i {
+      width: 30px;
+      height: 30px;
+      color: white;
+    }
+
+    .admin-card-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .admin-card-content h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #8898aa;
+      display: flex;
+      align-items: center;
+    }
+
+    .admin-card-content h3 span.status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .count-container {
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .counter {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.1;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .counter-trend {
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      margin-left: 10px;
+    }
+
+    .trend-up {
+      background-color: rgba(56, 239, 125, 0.15);
+      color: #11998e;
+    }
+
+    .trend-down {
+      background-color: rgba(255, 107, 107, 0.15);
+      color: #ff6b6b;
+    }
+
+    .counter-trend i {
+      margin-right: 4px;
+      font-size: 0.8rem;
+    }
+
+    .admin-card-content p {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: #8898aa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-bg-shape {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      opacity: 0.08;
+      z-index: 1;
+      transition: all 0.6s ease;
+    }
+
+    .admin-card:hover .card-bg-shape {
+      transform: scale(1.3) translate(-10px, 10px);
+    }
+
+    .card-footer {
+      margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-stats {
+      font-size: 0.85rem;
+      color: #8898aa;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-stats i {
+      margin-right: 5px;
+      font-size: 0.9rem;
+    }
+
+    .card-action-btn {
+      background: white;
+      color: #2d3748;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-action-btn i {
+      margin-left: 6px;
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+
+    .card-action-btn:hover i {
+      transform: translateX(3px);
+    }
+
+    /* Today Card Styling */
+    .today-card .admin-card-icon {
+      background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .today-card .counter {
+      color: #FF6B6B;
+    }
+
+    .today-card .card-bg-shape {
+      background: #FF6B6B;
+    }
+
+    .today-card .card-action-btn:hover {
+      background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+      color: white;
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .today-card h3 .status-indicator {
+      background-color: #FF6B6B;
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+    }
+
+    /* Week Card Styling */
+    .week-card .admin-card-icon {
+      background: linear-gradient(135deg, #4E54C8, #8F94FB);
+      box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+    }
+
+    .week-card .counter {
+      color: #4E54C8;
+    }
+
+    .week-card .card-bg-shape {
+      background: #4E54C8;
+    }
+
+    .week-card .card-action-btn:hover {
+      background: linear-gradient(135deg, #4E54C8, #8F94FB);
+      color: white;
+      box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+    }
+
+    .week-card h3 .status-indicator {
+      background-color: #4E54C8;
+      box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.2);
+    }
+
+    /* Month Card Styling */
+    .month-card .admin-card-icon {
+      background: linear-gradient(135deg, #11998E, #38EF7D);
+      box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+    }
+
+    .month-card .counter {
+      color: #11998E;
+    }
+
+    .month-card .card-bg-shape {
+      background: #11998E;
+    }
+
+    .month-card .card-action-btn:hover {
+      background: linear-gradient(135deg, #11998E, #38EF7D);
+      color: white;
+      box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+    }
+
+    .month-card h3 .status-indicator {
+      background-color: #11998E;
+      box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.2);
+    }
+
+    /* Total Card Styling */
+    .total-card .admin-card-icon {
+      background: linear-gradient(135deg, #FF851B, #FFBC4B);
+      box-shadow: 0 5px 15px rgba(255, 133, 27, 0.3);
+    }
+
+    .total-card .counter {
+      color: #FF851B;
+    }
+
+    .total-card .card-bg-shape {
+      background: #FF851B;
+    }
+
+    .total-card .card-action-btn:hover {
+      background: linear-gradient(135deg, #FF851B, #FFBC4B);
+      color: white;
+      box-shadow: 0 5px 15px rgba(255, 133, 27, 0.3);
+    }
+
+    .total-card h3 .status-indicator {
+      background-color: #FF851B;
+      box-shadow: 0 0 0 3px rgba(255, 133, 27, 0.2);
+    }
+
+    /* Animation for card appearance */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .admin-card {
+      animation: fadeInUp 0.7s forwards cubic-bezier(0.19, 1, 0.22, 1);
+      opacity: 0;
+    }
+
+    .today-card { animation-delay: 0.1s; }
+    .week-card { animation-delay: 0.3s; }
+    .month-card { animation-delay: 0.5s; }
+    .total-card { animation-delay: 0.7s; }
+
+    /* Pulse animation for status indicators */
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 6px rgba(255, 107, 107, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+      }
+    }
+
+    .today-card h3 .status-indicator {
+      animation: pulse 2s infinite;
+    }
+
+    /* Responsive design */
+    @media (max-width: 1200px) {
+      .leave-admin-dashboard {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .leave-admin-dashboard {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+      
+      .admin-card {
+        padding: 20px;
+      }
+      
+      .counter {
+        font-size: 2.2rem;
+      }
+      
+      .nav-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .nav-btn {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .leave-admin-dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Additional flourishes */
+    .hover-lift {
+      transition: all 0.3s ease;
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-3px);
+    }
+    
+    /* Tooltip Styles */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: #2d3748;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.75rem;
+      font-weight: normal;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Nav menu icon for mobile */
+    .nav-menu-icon {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #2d3748;
+      margin-right: 15px;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-menu-icon {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <h2>Leave Management Dashboard</h2>
+    <p>Track and manage employee leave requests</p>
+    
+    <!-- Button Row -->
+    <div class="nav-buttons">
+      <button class="nav-btn active" data-stage="1">Dashboard</button>
+      <button class="nav-btn" data-stage="2">Leave Approval/Rejection</button>
+      <!-- <button class="nav-btn" data-stage="3">Reports</button> -->
+      <button class="nav-btn" data-stage="4">Manage Leave Policies</button>
+    </div>
+  </div>
+
+  <div class="leave-admin-dashboard">
+    <!-- Today's Leave Requests Card -->
+    <div class="admin-card today-card">
+      <div class="admin-card-header">
+        <div class="admin-card-icon">
+          <i class="fas fa-calendar-day"></i>
+        </div>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: #8898aa;"></i>
+          <span class="tooltiptext">Leave requests submitted today</span>
+        </span>
+      </div>
+      <div class="admin-card-content">
+        <h3><span class="status-indicator"></span>Today</h3>
+        <div class="count-container">
+          <span class="counter" data-item="P4_LEAVE_REQUEST_TODAY">0</span>
+          <span class="counter-trend trend-up">
+            <i class="fas fa-arrow-up"></i>12%
+          </span>
+        </div>
+        <p>Leave Requests</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-stats">
+          <i class="fas fa-clock"></i> Updated 5m ago
+        </div>
+        <button type="button" class="card-action-btn view-dialog-btn" data-dialog-page="133">
+          View <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="card-bg-shape"></div>
+    </div>
+
+    <!-- This Week's Leave Requests Card -->
+    <div class="admin-card week-card">
+      <div class="admin-card-header">
+        <div class="admin-card-icon">
+          <i class="fas fa-calendar-week"></i>
+        </div>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: #8898aa;"></i>
+          <span class="tooltiptext">Leave requests for this week</span>
+        </span>
+      </div>
+      <div class="admin-card-content">
+        <h3><span class="status-indicator"></span>This Week</h3>
+        <div class="count-container">
+          <span class="counter" data-item="P4_LEAVE_REQUEST_THIS_WEEK">0</span>
+          <span class="counter-trend trend-up">
+            <i class="fas fa-arrow-up"></i>8%
+          </span>
+        </div>
+        <p>Leave Requests</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-stats">
+          <i class="fas fa-clock"></i> Updated 15m ago
+        </div>
+        <button type="button" class="card-action-btn view-dialog-btn" data-dialog-page="134">
+          View <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="card-bg-shape"></div>
+    </div>
+
+    <!-- This Month's Leave Requests Card -->
+    <div class="admin-card month-card">
+      <div class="admin-card-header">
+        <div class="admin-card-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: #8898aa;"></i>
+          <span class="tooltiptext">Leave requests for this month</span>
+        </span>
+      </div>
+      <div class="admin-card-content">
+        <h3><span class="status-indicator"></span>This Month</h3>
+        <div class="count-container">
+          <span class="counter" data-item="P4_LEAVE_REQUEST_THIS_MONTH">0</span>
+          <span class="counter-trend trend-down">
+            <i class="fas fa-arrow-down"></i>3%
+          </span>
+        </div>
+        <p>Leave Requests</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-stats">
+          <i class="fas fa-clock"></i> Updated 1h ago
+        </div>
+        <button type="button" class="card-action-btn view-dialog-btn" data-dialog-page="135">
+          View <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="card-bg-shape"></div>
+    </div>
+
+    <!-- Total Leave Requests Card -->
+    <div class="admin-card total-card">
+      <div class="admin-card-header">
+        <div class="admin-card-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <span class="tooltip">
+          <i class="fas fa-info-circle" style="color: #8898aa;"></i>
+          <span class="tooltiptext">All leave requests in system</span>
+        </span>
+      </div>
+      <div class="admin-card-content">
+        <h3><span class="status-indicator"></span>Total</h3>
+        <div class="count-container">
+          <span class="counter" data-item="P4_TOTAL_LEAVE_REQUEST">0</span>
+          <span class="counter-trend trend-up">
+            <i class="fas fa-arrow-up"></i>15%
+          </span>
+        </div>
+        <p>Leave Requests</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-stats">
+          <i class="fas fa-clock"></i> Updated 2h ago
+        </div>
+        <button type="button" class="card-action-btn view-dialog-btn" data-dialog-page="135">
+          View <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="card-bg-shape"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Function to animate counting
+      function animateCounter(element, finalValue) {
+        // Convert string to number if needed
+        finalValue = parseInt(finalValue);
+        
+        // Set 0 as default for null or NaN values
+        if (isNaN(finalValue)) finalValue = 0;
+      
+        // Animation duration based on value size (faster for smaller numbers)
+        const duration = Math.min(2000, Math.max(1000, finalValue * 80));
+        
+        // Starting value
+        let startValue = 0;
+        
+        // Time variables
+        let startTime = null;
+        
+        // Animation function
+        function countUp(timestamp) {
+          if (!startTime) startTime = timestamp;
+          
+          // Calculate progress with easing
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          const easedProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress); // Exponential easing
+          
+          // Calculate current count
+          const currentCount = Math.floor(easedProgress * (finalValue - startValue) + startValue);
+          
+          // Update the counter
+          element.textContent = currentCount.toLocaleString();
+          
+          // Continue animation if not complete
+          if (progress < 1) {
+            requestAnimationFrame(countUp);
+          } else {
+            // Ensure final value is displayed exactly
+            element.textContent = finalValue.toLocaleString();
+          }
+        }
+        
+        // Start the animation
+        requestAnimationFrame(countUp);
+      }
+      
+      // Function to observe element visibility
+      function observeElement(element) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Get page item name
+              const pageItemName = element.dataset.item;
+              
+              // Get value from APEX page item
+              let pageItemValue = 0;
+              
+              // Try to get value from APEX page items
+              try {
+                pageItemValue = apex.item(pageItemName).getValue();
+              } catch (e) {
+                console.log("Using demo values as page item not found:", pageItemName);
+                // Demo values for testing outside APEX
+                const demoValues = {
+                  "P4_LEAVE_REQUEST_TODAY": 12,
+                  "P4_LEAVE_REQUEST_THIS_WEEK": 48,
+                  "P4_LEAVE_REQUEST_THIS_MONTH": 164,
+                  "P4_TOTAL_LEAVE_REQUEST": 789
+                };
+                pageItemValue = demoValues[pageItemName] || 0;
+              }
+              
+              // Start animation
+              animateCounter(element, pageItemValue);
+              
+              // Unobserve after animating
+              observer.unobserve(element);
+            }
+          });
+        }, { threshold: 0.1 });
+        
+        observer.observe(element);
+      }
+      
+      // Initialize counters
+      document.querySelectorAll('.counter').forEach(counter => {
+        observeElement(counter);
+      });
+      
+      // Listen for APEX page item changes
+      function setupApexListeners() {
+        if (typeof apex !== 'undefined') {
+          ['P4_LEAVE_REQUEST_TODAY', 'P4_LEAVE_REQUEST_THIS_WEEK', 
+           'P4_LEAVE_REQUEST_THIS_MONTH', 'P4_TOTAL_LEAVE_REQUEST'].forEach(item => {
+            try {
+              apex.item(item).setStyle('display', 'none'); // Optionally hide the original items
+              apex.item(item).onChange(function(data) {
+                const counter = document.querySelector(`.counter[data-item="${item}"]`);
+                if (counter) {
+                  animateCounter(counter, data.value);
+                }
+              });
+            } catch (e) {
+              console.log("Could not set up listener for:", item);
+            }
+          });
+        }
+      }
+
+      // Set up modal dialog navigation
+      document.querySelectorAll('.view-dialog-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          // Prevent the default behavior that's causing page refresh
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const dialogPage = this.getAttribute('data-dialog-page');
+          
+          if (typeof apex !== 'undefined') {
+            // APEX environment - open modal dialog
+            try {
+              apex.navigation.dialog(
+  'f?p=&APP_ID.:' + dialogPage + ':&APP_SESSION.::NO::',
+  {
+    title: 'Leave Requests Details',
+    height: '500',
+    width: '1000',
+    maximizable: true,
+    modal: true,
+    dialogClass: 'rounded-dialog', // Custom class for styling
+    open: function() {
+      // Additional styling that applies after dialog opens
+      $('.ui-dialog').css({
+        'box-shadow': '0 10px 25px rgba(0,0,0,0.1)',
+        'border': 'none'
+      });
+    }
+  },
+  't-Dialog--standard',
+  function(dialog) {
+    console.log('Dialog closed');
+  }
+);
+              
+              // Return false to prevent any form submission
+              return false;
+            } catch(e) {
+              console.error("Error opening dialog:", e);
+              alert("Error opening dialog page " + dialogPage);
+            }
+          } else {
+            // Demo mode
+            console.log("Would open modal dialog page:", dialogPage);
+            alert("In APEX, this would open modal dialog page " + dialogPage);
+          }
+          
+          // Return false to prevent any form submission
+          return false;
+        });
+      });
+      
+      // Navigation buttons click handler
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Remove active class from all buttons
+          document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.remove('active');
+          });
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Get the stage value from data attribute
+          const stageValue = this.getAttribute('data-stage');
+          
+          // Set the value of P4_STAGES page item
+          try {
+            apex.item("P4_STAGES").setValue(stageValue);
+            console.log('P4_STAGES set to: ' + stageValue);
+          } catch(e) {
+            console.log('Demo mode - P4_STAGES would be set to: ' + stageValue);
+          }
+          
+          // Return false to prevent form submission
+          return false;
+        });
+      });
+      
+      // Set up APEX listeners if in APEX environment
+      if (typeof apex !== 'undefined') {
+        // For APEX, we need to wait for page load
+        if (document.readyState === 'complete') {
+          setupApexListeners();
+        } else {
+          apex.jQuery(document).on('apexreadystatechange', function(e) {
+            if (e.originalEvent.readyState === 'complete') {
+              setupApexListeners();
+            }
+          });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
