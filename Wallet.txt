@@ -1,0 +1,5 @@
+Remove-Item -Recurse -Force "D:\oracle\OracleWallet"
+orapki wallet create -wallet "D:\oracle\OracleWallet" -pwd Apex#123 -auto_login
+orapki wallet add -wallet "D:\oracle\OracleWallet" -trusted_cert -cert "D:\oracle\sslRoot.crt" -pwd Apex#123
+orapki wallet add -wallet "D:\oracle\OracleWallet" -trusted_cert -cert "D:\oracle\sslIntm.crt" -pwd Apex#123
+orapki wallet display -wallet "D:\oracle\OracleWallet"
